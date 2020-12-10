@@ -1,0 +1,250 @@
+<!doctype html>
+<html>
+
+<head>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/handsontable@latest/dist/handsontable.full.min.css">
+    <link rel="stylesheet" type="text/css" href="https://handsontable.com/static/css/main.css">
+    <script src="https://cdn.jsdelivr.net/npm/handsontable@latest/dist/handsontable.full.min.js"></script>
+    <script src="https://fastcdn.org/Underscore.js/1.8.3/underscore-min.js"></script>
+</head>
+
+<body>
+    <div id="hot"></div>
+    <div id="hot2"></div>
+    <script>
+        var dataObject = [
+            {
+                id: 1437021,
+                environment: 'ED',
+                state: 'WI',
+                policyNumber: '1234567890',
+                status: 'Pass',
+                date: '03/24/2019'
+            },
+            {
+                id: 1437021,
+                environment: 'ED',
+                state: 'AL',
+                policyNumber: '1234787890',
+                status: 'Pass',
+                date: '03/24/2019'
+            }
+        ];
+        var hotElement = document.querySelector('#hot');
+        var hotElementContainer = hotElement.parentNode;
+        var hotSettings = {
+            data: dataObject,
+            columns: [
+                {
+                    data: 'id',
+                    type: 'numeric'
+                },
+                {
+                    data: 'environment',
+                    type: 'text'
+                },
+                {
+                    data: 'state',
+                    type: 'text'
+                },
+                {
+                    data: 'policyNumber',
+                    type: 'text'
+                },
+                {
+                    data: 'status',
+                    type: 'text'
+                },
+                {
+                    data: 'date',
+                    type: 'date',
+                    dateFormat: 'MM/DD/YYYY'
+                }
+            ],
+            stretchH: 'all',
+            width: 878,
+            autoWrapRow: true,
+            height: 487,
+            maxRows: 22,
+            manualRowResize: true,
+            manualColumnResize: true,
+            rowHeaders: true,
+            colHeaders: [
+                'Test Case Number',
+                'Environment',
+                'State',
+                'Policy Number',
+                'Status',
+                'Date'
+            ],
+            manualRowMove: true,
+            manualColumnMove: true,
+            contextMenu: true,
+            filters: true,
+            dropdownMenu: true,
+            columnSorting: {
+                indicator: true
+            },
+            autoColumnSize: {
+                samplingRatio: 23
+            }
+        };
+        var hot = new Handsontable(hotElement, hotSettings);
+    </script>
+
+    <script>
+        var dataObject = [
+            {
+                id: 1437021,
+                environment: "ED",
+                date: "03/24/2019",
+                state: [
+                    "WI",
+                    "AL"
+                ],
+                policyNumber: [
+                    "1234567890",
+                    "1234787890"
+                ],
+                status: [
+                    "Pass",
+                    "Fail"
+                ]
+            }
+        ];
+
+        var hotElement = document.querySelector('#hot2');
+        var hotElementContainer = hotElement.parentNode;
+        var hotSettings = {
+            data: dataObject,
+            columns: [
+                {
+                    data: 'id',
+                    type: 'numeric'
+                },
+                {
+                    data: 'environment',
+                    type: 'text'
+                },
+                {
+                    data: 'state',
+                    type: 'text'
+                },
+                {
+                    data: 'policyNumber',
+                    type: 'text'
+                },
+                {
+                    data: 'status',
+                    type: 'text'
+                },
+                {
+                    data: 'date',
+                    type: 'date',
+                    dateFormat: 'MM/DD/YYYY'
+                }
+            ],
+            stretchH: 'all',
+            width: 878,
+            autoWrapRow: true,
+            height: 487,
+            maxRows: 22,
+            manualRowResize: true,
+            manualColumnResize: true,
+            rowHeaders: true,
+            colHeaders: [
+                'Test Case Number',
+                'Environment',
+                'State',
+                'Policy Number',
+                'Status',
+                'Date'
+            ],
+            manualRowMove: true,
+            manualColumnMove: true,
+            contextMenu: true,
+            filters: true,
+            dropdownMenu: true,
+            columnSorting: {
+                indicator: true
+            },
+            autoColumnSize: {
+                samplingRatio: 23
+            },
+            mergeCells: true
+        };
+        var hot2 = new Handsontable(hotElement, hotSettings);
+    </script>
+
+    <script>
+        var data = [
+            {
+                id: 1437021,
+                environment: 'ED',
+                state: 'WI',
+                policyNumber: '1234567890',
+                status: 'Pass',
+                date: '03/24/2019'
+            },
+            {
+                id: 1437021,
+                environment: 'ED',
+                state: 'AL',
+                policyNumber: '1234787890',
+                status: 'Fail',
+                date: '03/24/2019'
+            },
+            {
+                id: 1437022,
+                environment: 'ED',
+                state: 'WI',
+                policyNumber: '1234567890',
+                status: 'Fail',
+                date: '03/24/2019'
+            },
+            {
+                id: 1437022,
+                environment: 'ED',
+                state: 'AL',
+                policyNumber: '1234787890',
+                status: 'Pass',
+                date: '03/24/2019'
+            }
+        ]
+
+        var groupedData = _.groupBy(data, function (d) {
+            return d.environment + '_' + d.id + '_' + d.date;
+        });
+
+        var mainGroups = [];
+        for (var key in groupedData) {
+            mainGroups.push(key);
+        }
+
+        mainGroups.forEach(function (j) {
+            groupedData[j].forEach(function (i) {
+                delete i.id;
+                delete i.environment;
+                delete i.date;
+            });
+        });
+
+        var actualPresentationData = [];
+        mainGroups.forEach(function (j) {
+            var data = {
+                'environment': j.split('_')[0],
+                'id': j.split('_')[1],
+                'date': j.split('_')[2],
+                'details': groupedData[j]
+            };
+            actualPresentationData.push(data);
+        });
+
+        console.log(mainGroups);
+        console.log(JSON.stringify(groupedData)); 
+        console.log(JSON.stringify(actualPresentationData)); 
+    </script>
+
+</body>
+
+</html>
